@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, UploadFile, Depends
 from app.docs.service import DocumentService
 from sqlalchemy.orm import Session
-from db.dependencies import get_db
+from app.db.dependencies import get_db
 
 router = APIRouter (
     prefix = '/docs',
