@@ -1,4 +1,5 @@
-#models
+#app/docs/models.py
+
 from app.db.base import Base
 from sqlalchemy.sql.sqltypes import String
 from sqlalchemy import Enum, DateTime, Integer
