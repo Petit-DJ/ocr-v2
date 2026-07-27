@@ -1,8 +1,7 @@
 from pathlib import Path
 
-import pymupdf     # PyMuPDF
-from PIL   import Image
-from typing import List
+import pymupdf
+from PIL import Image
 
 DPI = 300
 def pdf_to_images(pdf_path: Path) -> list[Image.Image]:

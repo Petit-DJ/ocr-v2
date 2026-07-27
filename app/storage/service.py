@@ -1,7 +1,9 @@
 #app/storage/service.py
 # from sqlalchemy.orm import Session
-from fastapi import UploadFile
 from pathlib import Path
+
+from fastapi import UploadFile
+
 
 class StorageService:
     async def save(self, file: UploadFile) -> str:
@@ -11,4 +13,7 @@ class StorageService:
        contents = await file.read()
        with open(file_path, "wb") as f:
                    f.write(contents)
-       return file_path
+       return str(file_path)
+
+#UPLOAD_DIR = Path(settings.UPLOAD_DIR)  # from config, e.g. "app/uploads"
+#UPLOAD_DIR.mkdir(parents=True, exist_ok=True)

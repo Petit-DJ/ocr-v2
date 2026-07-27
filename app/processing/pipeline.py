@@ -1,9 +1,10 @@
 #app/processing/pipeline.py
 
-from pathlib import Path
-from stages.ocr import run_ocr, extract_text
-from stages.pdf import pdf_to_images
+# from pathlib import Path
+
 from stages.address import extract_address
+from stages.ocr import extract_text, run_ocr
+from stages.pdf import pdf_to_images
 
 
 def process_invoice(pdf_path: str) -> str:

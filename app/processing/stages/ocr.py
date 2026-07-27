@@ -1,16 +1,16 @@
 import os
+
 os.environ["PADDLE_PDX_ENABLE_MKLDNN_BYDEFAULT"] = "0"
-from PIL import Image
-from paddleocr import PaddleOCR
-from paddleocr import PaddleOCR
 import numpy as np
+from paddleocr import PaddleOCR
+from PIL import Image
 
 ocr_engine = PaddleOCR(
     lang="en",
     use_doc_orientation_classify=False,
     use_doc_unwarping=False,
     use_textline_orientation=False,
-    )
+)
 
 # def run_ocr(images):
 #     results = []

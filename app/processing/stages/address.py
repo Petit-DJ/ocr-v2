@@ -1,4 +1,5 @@
-from app.pipeline.stages.ocr import run_ocr
+# from app.processing.stages.ocr import run_ocr
+
 
 def extract_address(text: str) -> str | None:
     lines = [line.strip() for line in text.splitlines()]
@@ -14,10 +15,10 @@ def extract_address(text: str) -> str | None:
             start = i + 1
             break
 
-    if start is None:
+    if START_MARKERS is None:
         return None
 
-    stop_words = {
+    STOP_WORDS = {
         "CONTACT",
         "INVOICE DATE",
         "ORDER NO",
@@ -31,7 +32,7 @@ def extract_address(text: str) -> str | None:
     address = []
 
     for line in lines[start:]:
-        if line.upper() in stop_words:
+        if line.upper() in STOP_WORDS:
             break
 
         if line:

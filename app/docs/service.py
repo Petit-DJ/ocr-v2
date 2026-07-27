@@ -1,13 +1,17 @@
 #app/docs/service.py
 
-from fastapi import UploadFile
-from app.docs.models import DbDoc, DocumentStatus
-from app.storage.service import StorageService
 from pathlib import Path
+
+from fastapi import UploadFile
+from sqlalchemy.orm import Session
+
+from app.docs.models import DbDoc, DocumentStatus
 from app.docs.repository import DocumentRepository
+from app.storage.service import StorageService
+
 
 class DocumentService:
-    def __init__(self):
+    def __init__(self, db: Session):
         self.storage_service = StorageService()
         self.repository = DocumentRepository(db)
         
