@@ -1,7 +1,9 @@
 #main.py
-from fastapi import FastAPI
-from app.docs import router
 from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+
+from app.docs import router
 
 
 @asynccontextmanager
