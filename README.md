@@ -187,8 +187,8 @@ Current milestone:
 - ✅ File upload architecture
 - ✅ Storage layer
 - ✅ Database setup
+- ✅ OCR integration
 - 🚧 Repository layer
-- 🚧 OCR integration
 - ⏳ Production enhancements
 
 ---
