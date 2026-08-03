@@ -6,5 +6,8 @@ load_dotenv()
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+psycopg://postgres:1234@localhost:5432/ocr-v2",
+    "postgresql+psycopg://postgres:1234@localhost:5432/ocr_v2",
 )
+
+UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
+
