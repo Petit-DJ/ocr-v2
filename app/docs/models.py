@@ -2,7 +2,7 @@
 
 from app.db.base import Base
 from sqlalchemy.sql.sqltypes import String
-from sqlalchemy import Enum, DateTime, Integer
+from sqlalchemy import Enum, DateTime, Integer, Text
 from sqlalchemy.orm import mapped_column, Mapped
 import enum
 from datetime import datetime
@@ -35,3 +35,4 @@ class DbDoc(Base):
         )
     file_size: Mapped[int] = mapped_column(Integer)
     created_at: Mapped[datetime] = mapped_column(DateTime, default = datetime.utcnow)
+    extracted_text: Mapped[str | None] = mapped_column(Text, nullable=True)

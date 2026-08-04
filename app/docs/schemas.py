@@ -14,3 +14,4 @@ class DocumentResponse(BaseModel):
     original_filename : str
     status: DocumentStatus
     file_size: int
+    extracted_text: str | None
