@@ -1,158 +1,169 @@
 # OCR Backend
 
-A production-oriented OCR backend built with **FastAPI** following clean architecture principles. The project focuses on building a scalable and maintainable document processing pipeline with clear separation of concerns.
+A production-oriented OCR backend built with **FastAPI** following Clean Architecture principles. The project focuses on building a scalable, maintainable document processing pipeline with clear separation of concerns.
 
-## Overview
-
-The backend accepts document uploads, stores document metadata, processes files through an OCR pipeline, and returns the extracted text as an API response.
-
-The goal is to build the system incrementally while following production backend practices such as service layers, repositories, dependency separation, and modular architecture.
+The backend accepts document uploads, stores metadata, extracts text using **PaddleOCR**, persists OCR results in the database, and exposes the processed document through a REST API.
 
 ---
 
-## Current Features
+# Features
 
-- Upload PDF documents
-- Store uploaded files
-- SQLAlchemy database integration
-- Document metadata model
-- Layered architecture (Router → Service → Storage)
-- Modular project structure
+## Document Upload
+
+* Upload PDF and image documents
+* Store uploaded files on disk
+* Generate unique filenames
+* Track file metadata
+
+## OCR Pipeline
+
+* Convert PDFs into images using **PyMuPDF**
+* Extract text using **PaddleOCR**
+* Normalize extracted text
+* Store OCR output in the database
+* Return extracted text through the API
+
+## Database
+
+* SQLAlchemy ORM
+* Alembic migrations
+* PostgreSQL support
+* UUID-based document IDs
+
+## Architecture
+
+* Clean Architecture
+* Repository Pattern
+* Service Layer
+* Dependency Injection
+* Modular package structure
+* Pydantic response models
+
+# Tech Stack
+
+* Python 3.12+
+* FastAPI
+* SQLAlchemy
+* PostgreSQL
+* Alembic
+* PaddleOCR
+* PaddlePaddle
+* PyMuPDF
+* Pydantic
+* Uvicorn
+* UV
 
 ---
 
-## Planned Features
-
-- PaddleOCR integration
-- OCR text extraction
-- Document repository layer
-- Request validation
-- Structured API responses
-- Logging
-- Exception handling
-- Configuration management
-- Unit & Integration testing
-- Authentication
-- PostgreSQL support
-- Docker deployment
-
----
-
-## Tech Stack
-
-- Python 3.13+
-- FastAPI
-- SQLAlchemy
-- SQLite
-- Pydantic
-- Uvicorn
-- UV (Package Manager)
-
----
-
-## Project Structure
+# Project Structure
 
 ```
 app/
 │
-├── db/
-│   ├── base.py
-│   └── database.py
+├── core/
 │
-├── document/
-│   ├── model.py
+├── db/
+│
+├── docs/
+│   ├── models.py
 │   ├── repository.py
 │   ├── router.py
+│   ├── schemas.py
 │   └── service.py
+│
+├── processing/
+│   ├── pipeline.py
+│   └── stages/
+│       ├── pdf.py
+│       └── ocr.py
 │
 ├── storage/
 │   └── service.py
 │
-├── core/
+├── uploads/
 │
 └── main.py
 ```
 
 ---
 
-## Architecture
+# Architecture
 
 ```
-Client
-   │
-   ▼
-FastAPI Route
-   │
-   ▼
-Document Service
-   │
-   ├──────────────► Storage Service
-   │                     │
-   │                     ▼
-   │                  File System
-   │
-   ├──────────────► Repository (Upcoming)
-   │                     │
-   │                     ▼
-   │                  Database
-   │
-   └──────────────► OCR Service (Upcoming)
-                         │
-                         ▼
-                  Extracted Text
+                Client
+                   │
+                   ▼
+            FastAPI Router
+                   │
+                   ▼
+           Document Service
+        ┌──────────┼───────────┐
+        │          │           │
+        ▼          ▼           ▼
+ StorageService Repository  OCR Pipeline
+        │          │           │
+        ▼          ▼           ▼
+   File System PostgreSQL PaddleOCR
+                               │
+                               ▼
+                       Extracted Text
 ```
 
 ---
 
-## Request Flow
+# Request Flow
 
 ```
 Client
    │
-POST /upload
+POST /docs/upload
    │
    ▼
-Route
+Router
    │
    ▼
 DocumentService
    │
-   ▼
-StorageService
+   ├────────► StorageService
+   │              │
+   │              ▼
+   │         Save uploaded file
    │
-   ▼
-Save File
+   ├────────► OCR Pipeline
+   │              │
+   │              ▼
+   │     PDF → Images → PaddleOCR
+   │              │
+   │              ▼
+   │      Extract & Normalize Text
    │
-   ▼
-Repository (Upcoming)
-   │
-   ▼
-Store Metadata
-   │
-   ▼
-OCR Service (Upcoming)
-   │
-   ▼
-Return OCR Response
+   └────────► Repository
+                  │
+                  ▼
+         Store metadata + OCR text
+                  │
+                  ▼
+          Return API Response
 ```
 
 ---
 
-## Design Principles
+# Design Principles
 
-- Separation of Concerns
-- SOLID Principles
-- Thin Routes
-- Business Logic inside Services
-- Repository Pattern
-- Modular and Maintainable Architecture
-- Production-oriented Project Structure
+* Clean Architecture
+* SOLID Principles
+* Repository Pattern
+* Thin Routers
+* Business Logic inside Services
+* Separation of Concerns
+* Dependency Injection
+* Modular & Maintainable Design
 
 ---
 
-## Getting Started
+# Getting Started
 
-### Clone the repository
+### Clone
 
 ```bash
 git clone https://github.com/Petit-DJ/ocr-v2.git
@@ -165,13 +176,25 @@ cd ocr-v2
 uv sync
 ```
 
-### Run the application
+### Configure
+
+Create a `.env`
+
+```env
+DATABASE_URL=postgresql+psycopg://postgres:password@localhost:5432/ocr_v2
+
+UPLOAD_DIR=app/uploads
+```
+
+### Run
 
 ```bash
 uv run uvicorn app.main:app --reload
 ```
 
-### API Documentation
+---
+
+# API Documentation
 
 ```
 http://127.0.0.1:8000/docs
@@ -179,29 +202,30 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## Project Status
+# Example Response
 
-🚧 Under Development
+```json
+{
+  "id": "886c66fc-90e4-4347-98fb-d91268ea3686",
+  "original_filename": "Test.pdf",
+  "status": "UPLOADED",
+  "file_size": 8509198,
+  "extracted_text": "Dummy Text 123"
+}
+```
 
-Current milestone:
-- ✅ File upload architecture
-- ✅ Storage layer
-- ✅ Database setup
-- ✅ OCR integration
-- 🚧 Repository layer
-- ⏳ Production enhancements
 
----
+# Current Status
 
-## Learning Goals
-
-This project is being developed with a focus on learning production backend engineering concepts, including:
-
-- Backend architecture
-- Data flow design
-- Service layer pattern
-- Repository pattern
-- SQLAlchemy ORM
-- API design
-- Clean code practices
-- Scalable project structure
+* Document upload
+* File storage
+* PostgreSQL integration
+* SQLAlchemy ORM
+* Alembic migrations
+* Repository layer
+* Service layer
+* PaddleOCR integration
+* PDF → Image conversion
+* OCR text extraction
+* Persist OCR results
+* API response models
